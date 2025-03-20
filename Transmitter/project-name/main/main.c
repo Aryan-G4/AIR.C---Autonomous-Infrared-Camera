@@ -35,7 +35,7 @@ void uart_init() {
 void app_main() {
     uart_init(); // Initialize UART
     char message[100];
-    int num = 4;
+    int num = 3;
 
     sprintf(message, "number is: %d\n", num);
 
