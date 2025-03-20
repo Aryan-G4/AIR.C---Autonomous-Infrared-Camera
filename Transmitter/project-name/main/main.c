@@ -19,18 +19,20 @@
 #define I2C_MASTER_SDA_IO 21      // GPIO for SDA
 #define I2C_MASTER_FREQ_HZ 100000 // 100kHz I2C speed
 #define I2C_MASTER_PORT I2C_NUM_0 // Use I2C port 0
-#define DEVICE_ADDR 0x50          // Replace with your device's I2C address
+#define DEVICE_ADDR 0x68 << 1          // Replace with your device's I2C address
 #define REGISTER_ADDR 0x10        // Replace with the register you want to read
 
 /*Function declarations*/
 void uart_init();
 void i2c_init();
 void print_msg(char* message);
+uint8_t i2c_read();
+
 
 void app_main() {
     uart_init(); // Initialize UART
     i2c_init();
-    //char message[100];
+    char message[100];
     //int num = 3;
 
     //sprintf(message, "number is: %d\n", num);
@@ -41,11 +43,13 @@ void app_main() {
     while (1) {
         print_msg("hi\n");
         //uart_write_bytes(UART_NUM, message, strlen(message)); // Send message over UART
-        gpio_set_level(LED_PIN, 1);  // Turn LED ON
-        vTaskDelay(pdMS_TO_TICKS(500));  // Wait 500ms
+        uint8_t i2c_result = i2c_read();
+        sprintf(message, "i2c completed, value is: %d",i2c_result);
+        print_msg(message);
 
-        gpio_set_level(LED_PIN, 0);  // Turn LED OFF
+        gpio_set_level(LED_PIN, 1);  // Turn LED ON
         vTaskDelay(pdMS_TO_TICKS(3000)); // Delay 1 second
+        gpio_set_level(LED_PIN, 0);  // Turn LED OFF
     }
 }
 
@@ -80,4 +84,20 @@ void i2c_init() {
 
 void print_msg(char* message){
     uart_write_bytes(UART_NUM, message, strlen(message));
+}
+
+uint8_t i2c_read(){
+    print_msg("starting i2c read\n");
+    uint8_t reg = 0x00;
+    
+    uint8_t result;
+
+    print_msg("entering i2c master write");
+    i2c_master_write_to_device(I2C_MASTER_PORT,DEVICE_ADDR,&reg,1,5000);
+    print_msg("completed i2c master write\n");
+    
+    i2c_master_read_from_device(I2C_MASTER_PORT,DEVICE_ADDR,&result,1,5000);
+    print_msg("finished I2c read from reg 0\n");
+    return result;
+
 }
