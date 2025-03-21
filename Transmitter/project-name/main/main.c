@@ -19,7 +19,7 @@
 #define I2C_MASTER_SDA_IO 21      // GPIO for SDA
 #define I2C_MASTER_FREQ_HZ 100000 // 100kHz I2C speed
 #define I2C_MASTER_PORT I2C_NUM_0 // Use I2C port 0
-#define DEVICE_ADDR 0x33 << 1          // Replace with your device's I2C address
+#define DEVICE_ADDR 0x33           // Replace with your device's I2C address
 
 /*Function declarations*/
 void uart_init();
@@ -46,14 +46,14 @@ void app_main() {
         //uart_write_bytes(UART_NUM, message, strlen(message)); // Send message over UART
 
         uint16_t pixelval = 1;
-        pixelval = i2c_read(0x054A);
+        pixelval = i2c_read(0x058A);
         
-        sprintf(message, "i2c read completed, pixel value is: %d\n",pixelval);
+        sprintf(message, "i2c read completed, pixel value is: %x\n",pixelval);
         print_msg(message);
-        
-
+        //vTaskDelay(10000);
+        //i2c_write(0x0001,0x8000);
         gpio_set_level(LED_PIN, 1);  // Turn LED ON
-        vTaskDelay(pdMS_TO_TICKS(3000)); // Delay 1 second
+        vTaskDelay(pdMS_TO_TICKS(5000)); // Delay 1 second
         gpio_set_level(LED_PIN, 0);  // Turn LED OFF
     }
 }
@@ -94,14 +94,19 @@ void print_msg(char* message){
 uint16_t i2c_read(uint16_t reg){
     print_msg("starting i2c read\n");
     uint8_t buffer[2] = {(reg&0xFF00)>>8, reg & 0x00FF};
-    uint8_t result;
+    uint8_t result[2];
     print_msg("entering i2c master write\n");
-    i2c_master_write_to_device(I2C_MASTER_PORT,DEVICE_ADDR,buffer,2,5000);
+    if(i2c_master_write_to_device(I2C_MASTER_PORT,DEVICE_ADDR,buffer,2,5000) != ESP_OK){
+        print_msg("i2c master write failed\n");
+    }
     print_msg("completed i2c master write\n");
     
-    i2c_master_read_from_device(I2C_MASTER_PORT,DEVICE_ADDR,&result,1,5000);
+    if(i2c_master_read_from_device(I2C_MASTER_PORT,DEVICE_ADDR,result,2,5000) != ESP_OK){
+        print_msg("i2c master read failed\n");
+    }
     print_msg("finished I2c read from reg\n");
-    return result;
+    uint16_t end = result[0] | result[1]<<8;
+    return end;
 
 }
 
@@ -110,7 +115,9 @@ void i2c_write(uint16_t data,uint16_t reg) {
     uint8_t buffer[4] = {(reg&0xFF00)>>8, reg & 0x00FF, (data&0xFF00)>>8, data & 0x00FF};   // buffer contains address and data to be written
 
     print_msg("entering 12c master write\n");
-    i2c_master_write_to_device(I2C_MASTER_PORT, DEVICE_ADDR, buffer, 4, 5000);
+    if(i2c_master_write_to_device(I2C_MASTER_PORT, DEVICE_ADDR, buffer, 4, 5000)!=ESP_OK){
+        print_msg("i2c master read failed\n");
+    };
     print_msg("completed i2c master write\n");
 }
 
