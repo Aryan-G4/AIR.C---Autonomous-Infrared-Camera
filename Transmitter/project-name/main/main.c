@@ -19,15 +19,14 @@
 #define I2C_MASTER_SDA_IO 21      // GPIO for SDA
 #define I2C_MASTER_FREQ_HZ 100000 // 100kHz I2C speed
 #define I2C_MASTER_PORT I2C_NUM_0 // Use I2C port 0
-#define DEVICE_ADDR 0x68 << 1          // Replace with your device's I2C address
-#define REGISTER_ADDR 0x10        // Replace with the register you want to read
+#define DEVICE_ADDR 0x33 << 1          // Replace with your device's I2C address
 
 /*Function declarations*/
 void uart_init();
 void i2c_init();
 void print_msg(char* message);
-uint8_t i2c_read();
-void i2c_write(uint8_t data);
+uint16_t i2c_read(uint16_t reg);
+void i2c_write(uint16_t data, uint16_t reg);
 
 
 void app_main() {
@@ -41,21 +40,16 @@ void app_main() {
     esp_rom_gpio_pad_select_gpio(LED_PIN);
     gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
     printf("testing printf");
-    int num_iters = 0;
+    
     while (1) {
         print_msg("hi\n");
         //uart_write_bytes(UART_NUM, message, strlen(message)); // Send message over UART
-        uint8_t i2c_result = i2c_read();
-        sprintf(message, "i2c read completed, value is: %d",i2c_result);
-        print_msg(message);
 
-        if (num_iters == 4) {
-            uint8_t data = 4;
-            i2c_write(data);
-        }   
-        num_iters++;
-        // uint8_t data = 4;
-        // i2c_write(data);
+        uint16_t pixelval = 1;
+        pixelval = i2c_read(0x054A);
+        
+        sprintf(message, "i2c read completed, pixel value is: %d\n",pixelval);
+        print_msg(message);
         
 
         gpio_set_level(LED_PIN, 1);  // Turn LED ON
@@ -97,28 +91,26 @@ void print_msg(char* message){
     uart_write_bytes(UART_NUM, message, strlen(message));
 }
 
-uint8_t i2c_read(){
+uint16_t i2c_read(uint16_t reg){
     print_msg("starting i2c read\n");
-    uint8_t reg = 0x00;
-    
+    uint8_t buffer[2] = {(reg&0xFF00)>>8, reg & 0x00FF};
     uint8_t result;
-
     print_msg("entering i2c master write\n");
-    i2c_master_write_to_device(I2C_MASTER_PORT,DEVICE_ADDR,&reg,1,5000);
+    i2c_master_write_to_device(I2C_MASTER_PORT,DEVICE_ADDR,buffer,2,5000);
     print_msg("completed i2c master write\n");
     
     i2c_master_read_from_device(I2C_MASTER_PORT,DEVICE_ADDR,&result,1,5000);
-    print_msg("finished I2c read from reg 0\n");
+    print_msg("finished I2c read from reg\n");
     return result;
 
 }
 
-void i2c_write(uint8_t data) {
+void i2c_write(uint16_t data,uint16_t reg) {
     print_msg("starting i2c write\n");
-    uint8_t buffer[2] = {0x00, data};   // buffer contains address and data to be written
+    uint8_t buffer[4] = {(reg&0xFF00)>>8, reg & 0x00FF, (data&0xFF00)>>8, data & 0x00FF};   // buffer contains address and data to be written
 
     print_msg("entering 12c master write\n");
-    i2c_master_write_to_device(I2C_MASTER_PORT, DEVICE_ADDR, buffer, 2, 5000);
+    i2c_master_write_to_device(I2C_MASTER_PORT, DEVICE_ADDR, buffer, 4, 5000);
     print_msg("completed i2c master write\n");
 }
 
