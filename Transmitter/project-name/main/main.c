@@ -27,6 +27,7 @@ void uart_init();
 void i2c_init();
 void print_msg(char* message);
 uint8_t i2c_read();
+void i2c_write(uint8_t data);
 
 
 void app_main() {
@@ -40,12 +41,22 @@ void app_main() {
     esp_rom_gpio_pad_select_gpio(LED_PIN);
     gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
     printf("testing printf");
+    int num_iters = 0;
     while (1) {
         print_msg("hi\n");
         //uart_write_bytes(UART_NUM, message, strlen(message)); // Send message over UART
         uint8_t i2c_result = i2c_read();
-        sprintf(message, "i2c completed, value is: %d",i2c_result);
+        sprintf(message, "i2c read completed, value is: %d",i2c_result);
         print_msg(message);
+
+        if (num_iters == 4) {
+            uint8_t data = 4;
+            i2c_write(data);
+        }   
+        num_iters++;
+        // uint8_t data = 4;
+        // i2c_write(data);
+        
 
         gpio_set_level(LED_PIN, 1);  // Turn LED ON
         vTaskDelay(pdMS_TO_TICKS(3000)); // Delay 1 second
@@ -92,7 +103,7 @@ uint8_t i2c_read(){
     
     uint8_t result;
 
-    print_msg("entering i2c master write");
+    print_msg("entering i2c master write\n");
     i2c_master_write_to_device(I2C_MASTER_PORT,DEVICE_ADDR,&reg,1,5000);
     print_msg("completed i2c master write\n");
     
@@ -100,4 +111,27 @@ uint8_t i2c_read(){
     print_msg("finished I2c read from reg 0\n");
     return result;
 
+}
+
+void i2c_write(uint8_t data) {
+    print_msg("starting i2c write\n");
+    uint8_t buffer[2] = {0x00, data};   // buffer contains address and data to be written
+
+    print_msg("entering 12c master write\n");
+    i2c_master_write_to_device(I2C_MASTER_PORT, DEVICE_ADDR, buffer, 2, 5000);
+    print_msg("completed i2c master write\n");
+}
+
+void print_arr(int *arr, int rows, int cols) {
+    // print out our array of temperature values
+    print_msg("\t\tSTART OF CURRENT TEMPERATURE MAP\n");
+    char message[100];
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            sprintf(message, "%d ", arr[i*cols + j]);
+            print_msg(message);
+        }
+        print_msg("\n");
+    }
+    print_msg("\t\tEND OF CURRENT TEMPERATURE MAP\n");
 }
