@@ -5,6 +5,7 @@
 #include <string.h>
 #include "driver/gpio.h"
 #include "driver/i2c.h"
+#include "wireless_esp.h"
 
 #define NUM_ROWS 24
 #define NUM_COLS 32
@@ -43,12 +44,13 @@ void app_main() {
 
     esp_rom_gpio_pad_select_gpio(LED_PIN);
     gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
-    printf("testing printf");
     
     while (1) {
         //print_msg("hi\n");
         //uart_write_bytes(UART_NUM, message, strlen(message)); // Send message over UART
-
+        wirelessmessagetest();
+        vTaskDelay(3000);
+        
         uint16_t pixelval = 1;
         pixelval = i2c_read(0x0486);
         

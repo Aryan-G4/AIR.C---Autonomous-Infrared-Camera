@@ -7,5 +7,8 @@
     ],
     "idf.portWin": "COM2",
     "idf.toolsPathWin": "C:\\Users\\ghosh\\.espressif",
-    "idf.flashType": "UART"
+    "idf.flashType": "UART",
+    "files.associations": {
+        "main.h": "c"
+    }
 }
