@@ -6,37 +6,18 @@
 #include "driver/gpio.h"
 #include "driver/i2c.h"
 #include "wireless_esp.h"
-
-#define NUM_ROWS 24
-#define NUM_COLS 32
-
-/*Important registers*/
-#define STATUS_REG 0x8000
-
-#define UART_NUM UART_NUM_0  // Use UART2
-#define TXD_PIN 17           // GPIO17 as TX
-#define RXD_PIN 16           // GPIO16 as RX
-#define BUF_SIZE 1024        // Buffer size
-
-#define LED_PIN 2
-
-#define I2C_MASTER_SCL_IO 22      // GPIO for SCL
-#define I2C_MASTER_SDA_IO 21      // GPIO for SDA
-#define I2C_MASTER_FREQ_HZ 100000 // 100kHz I2C speed
-#define I2C_MASTER_PORT I2C_NUM_0 // Use I2C port 0
-#define DEVICE_ADDR 0x33           // Replace with your device's I2C address
-
-/*Function declarations*/
-void uart_init();
-void i2c_init();
-void print_msg(char* message);
-uint16_t i2c_read(uint16_t reg);
-void i2c_write(uint16_t data, uint16_t reg);
-
+#include "esp_wifi.h"
+#include "esp_now.h"
+#include "esp_netif.h"
+#include "nvs_flash.h"
+#include "main.h"
 
 void app_main() {
     uart_init(); // Initialize UART
     i2c_init();
+    wifi_init();
+
+
     char message[100];
     //int num = 3;
 
@@ -49,7 +30,8 @@ void app_main() {
         //print_msg("hi\n");
         //uart_write_bytes(UART_NUM, message, strlen(message)); // Send message over UART
         wirelessmessagetest();
-        vTaskDelay(3000);
+        read_mac_address();
+        vTaskDelay(pdMS_TO_TICKS(3000));
         
         uint16_t pixelval = 1;
         pixelval = i2c_read(0x0486);
@@ -65,26 +47,24 @@ void app_main() {
         }
         print_msg("DONE reading registers\n");
         //while(1);
-        /*Write to status register to clear bit*/
-        uint16_t cur_status = i2c_read(0x8000);
+        
+        uint16_t cur_status = i2c_read(STATUS_REG);
         uint16_t new_status = cur_status & 0xFFF7;
-        i2c_write(new_status,0x8000);
+        i2c_write(new_status,STATUS_REG);
 
-        /*Set start bit*/
-         cur_status = i2c_read(0x8000);
+        
+         cur_status = i2c_read(STATUS_REG);
          new_status = cur_status | 0x0020;
-        i2c_write(new_status,0x8000); 
+        i2c_write(new_status,STATUS_REG); 
 
         while((i2c_read(STATUS_REG) & 0x0008) == 0){
             print_msg("waiting for status bit\n");
             vTaskDelay(100);
         }
 
-        //vTaskDelay(10000);
-        //i2c_write(0x0001,0x8000);
-        gpio_set_level(LED_PIN, 1);  // Turn LED ON
-        vTaskDelay(pdMS_TO_TICKS(3000)); // Delay 1 second
-        gpio_set_level(LED_PIN, 0);  // Turn LED OFF
+        toggleLED();
+        vTaskDelay(pdMS_TO_TICKS(1000)); // Delay 1 second
+        toggleLED();
     }
 }
 
@@ -119,6 +99,12 @@ void i2c_init() {
 
 void print_msg(char* message){
     uart_write_bytes(UART_NUM, message, strlen(message));
+}
+
+void print_num(char*message, uint8_t num){
+    char outbuff[30];
+    sprintf(outbuff, message,num);
+    uart_write_bytes(UART_NUM, outbuff, strlen(outbuff));
 }
 
 uint16_t i2c_read(uint16_t reg){
@@ -162,4 +148,13 @@ void print_arr(int *arr, int rows, int cols) {
         print_msg("\n");
     }
     print_msg("\t\tEND OF CURRENT TEMPERATURE MAP\n");
+}
+
+void toggleLED(void){
+    if (gpio_get_level(LED_PIN)){
+        gpio_set_level(LED_PIN,0);
+    }
+    else{
+        gpio_set_level(LED_PIN,1);
+    }
 }

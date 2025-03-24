@@ -30,8 +30,11 @@
 void uart_init();
 void i2c_init();
 void print_msg(char* message);
+void print_num(char * message, uint8_t num);
 uint16_t i2c_read(uint16_t reg);
 void i2c_write(uint16_t data, uint16_t reg);
+
 void print_arr(int *arr, int rows, int cols);
+void toggleLED();
 
 #endif // MAIN_H
