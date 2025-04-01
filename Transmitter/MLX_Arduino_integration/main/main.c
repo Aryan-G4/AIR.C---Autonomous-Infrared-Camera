@@ -9,5 +9,10 @@
 */
 void app_main(void)
 {
+    pinMode(2,OUTPUT);
 
+    while(1){
+        digitalWrite(2,1);
+        delay(1000);
+    }
 }

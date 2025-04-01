@@ -47,17 +47,17 @@ void app_main() {
     }
 
     // Send data every 2 seconds
-    char message = 'asdf';
+    char message[100] = "ABC\n";
     while (1) {
         
         esp_err_t result = esp_now_send(receiver_mac, (uint8_t *) &message, sizeof(message));
 
         if (result == ESP_OK) {
-            ESP_LOGI(TAG, "Sent Data: %c", message);
+            ESP_LOGI(TAG, "Sent Data:");
         } else {
             ESP_LOGE(TAG, "Failed to send");
         }
-        vTaskDelay(pdMS_TO_TICKS(500)); // Delay 2 seconds
+        vTaskDelay(pdMS_TO_TICKS(1000)); // Delay 2 seconds
         
     }
 }
