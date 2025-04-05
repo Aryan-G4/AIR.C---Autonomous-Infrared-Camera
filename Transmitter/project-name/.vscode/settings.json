@@ -1,15 +1,21 @@
 {
     "C_Cpp.intelliSenseEngine": "default",
-    "idf.espIdfPathWin": "C:\\Users\\ghosh\\esp\\v5.4\\esp-idf",
-    "idf.pythonInstallPath": "C:\\Users\\ghosh\\.espressif\\tools\\idf-python\\3.11.2\\python.exe",
+    "idf.espIdfPathWin": "C:\\Users\\ebrec\\esp\\v5.4.1\\esp-idf",
+    "idf.pythonInstallPath": "C:\\Users\\ebrec\\.espressif\\tools\\idf-python\\3.11.2\\python.exe",
     "idf.openOcdConfigs": [
         "board/esp32-wrover-kit-3.3v.cfg"
     ],
-    "idf.portWin": "COM2",
-    "idf.toolsPathWin": "C:\\Users\\ghosh\\.espressif",
+    "idf.portWin": "COM5",
+    "idf.toolsPathWin": "C:\\Users\\ebrec\\.espressif",
     "idf.flashType": "UART",
     "files.associations": {
         "main.h": "c",
-        "esp_wifi.h": "c"
+        "esp_wifi.h": "c",
+        "mlx90640_i2c_driver.h": "c",
+        "freertos.h": "c",
+        "stdio.h": "c"
+    },
+    "idf.customExtraVars": {
+        "IDF_TARGET": "esp32"
     }
 }
