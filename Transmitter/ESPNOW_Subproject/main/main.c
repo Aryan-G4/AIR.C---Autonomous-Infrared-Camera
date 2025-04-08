@@ -35,7 +35,7 @@ void app_main() {
     // Register send callback
     esp_now_register_send_cb(on_data_sent);
 
-    // Register the peer (Receiver)
+   
     esp_now_peer_info_t peer = {};
     memcpy(peer.peer_addr, receiver_mac, 6);
     peer.channel = 0;
@@ -57,7 +57,7 @@ void app_main() {
         } else {
             ESP_LOGE(TAG, "Failed to send");
         }
-        vTaskDelay(pdMS_TO_TICKS(1000)); // Delay 2 seconds
+        vTaskDelay(pdMS_TO_TICKS(1000)); 
         
     }
 }
