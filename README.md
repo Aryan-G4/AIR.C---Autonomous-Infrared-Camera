@@ -1,2 +1,68 @@
-# IR-FireDetecor
-Infrared Camera driven fire detector.
+# AIDA: Automated Infrared Detection Aperture
+# Fire Detection Swivel Robot
+
+A self-rotating, fire-detecting robot that uses infrared imaging and wireless communication to identify and alert the presence of fire in real time.  
+This project combines mechanical motion, embedded firmware, and networked communication into a compact autonomous system.
+
+---
+
+## Overview
+
+The robot continuously rotates using a stepper motor while scanning its surroundings with an infrared camera module.  
+When a fire source is detected, it:
+1. Stops rotating.
+2. Sends a wireless alert to another ESP32 device using the ESP-NOW protocol.
+
+This system demonstrates a practical integration of computer vision, sensor fusion, and real-time control on embedded hardware.
+
+---
+
+## Features
+
+- 360° autonomous rotation via stepper motor control  
+- Real-time fire detection using an **MLX90640 infrared camera**  
+- Wireless communication via **ESP-NOW** between two ESP32 modules  
+- Powered by a **5V portable phone charger** for mobility  
+- Automatic halt and alert transmission upon fire detection  
+- Modular hardware architecture for easy debugging and extension  
+
+---
+
+## Hardware Components
+
+| Component | Description | Purpose |
+|------------|--------------|----------|
+| **ESP32 DevKit V1** | Wi-Fi + Bluetooth microcontroller | Main processing and communication unit |
+| **MLX90640 IR Camera** | 32×24 thermal imaging sensor | Detects fire via infrared radiation |
+| **TP339 Stepper Motor Driver** | Stepper control interface | Controls swivel rotation of the robot |
+| **Stepper Motor (NEMA 17)** | Bipolar motor | Rotates the robot base |
+| **5V Portable Power Bank** | External USB supply | Powers the ESP32 and peripherals |
+| **Custom Mount and Chassis** | 3D-printed or machined structure | Holds the electronics and provides rotation support |
+
+---
+
+## System Architecture
+
+```text
++-------------------+
+|   MLX90640 IR Cam |
++-------------------+
+           |
+           v
++-------------------+       ESP-NOW        +-------------------+
+|   ESP32 DevKit V1 |  <-----------------> |   Remote ESP32 Rx |
+|   (Main Robot)    |                     | (Alert Receiver)   |
++-------------------+                     +-------------------+
+           |
+           v
++-------------------+
+|  TP339 Driver IC  |
++-------------------+
+           |
+           v
++-------------------+
+|   Stepper Motor   |
++-------------------+
+           |
+           v
+     [Robot Base]
