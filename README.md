@@ -1,5 +1,4 @@
 # AIDA: Automated Infrared Detection Aperture
-# Fire Detection Swivel Robot
 
 A self-rotating, fire-detecting robot that uses infrared imaging and wireless communication to identify and alert the presence of fire in real time.  
 This project combines mechanical motion, embedded firmware, and networked communication into a compact autonomous system.
@@ -27,6 +26,15 @@ This system demonstrates a practical integration of computer vision, sensor fusi
 - Modular hardware architecture for easy debugging and extension  
 
 ---
+## Solidworks model (3D printed)
+<img width="894" height="1093" alt="image" src="https://github.com/user-attachments/assets/1a46ad9c-f759-4687-a3e5-eea4655ce61a" />
+<img width="1192" height="1161" alt="image" src="https://github.com/user-attachments/assets/bb2ac3ba-a122-4a52-987d-482a2ab05275" />
+
+## Physical Model
+<img width="915" height="1217" alt="image" src="https://github.com/user-attachments/assets/da08b78b-706a-4cf4-9826-1c3fa212ee07" />
+<img width="735" height="1210" alt="image" src="https://github.com/user-attachments/assets/8a4446b0-f886-4420-b914-4266cbb61a39" />
+https://github.com/user-attachments/assets/6a3793b7-10fc-445e-afd6-0ba73308c616
+
 
 ## Hardware Components
 
