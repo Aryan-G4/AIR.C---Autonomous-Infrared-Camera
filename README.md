@@ -1,16 +1,15 @@
 # AIDA: Automated Infrared Detection Aperture
 
-A self-rotating, fire-detecting robot that uses infrared imaging and wireless communication to identify and alert the presence of fire in real time.  
+A self-controlled, fire-detecting robot that uses infrared imaging and wireless communication to identify and alert the presence of fire in real time and wirelessly report it to a host computer.  
 This project combines mechanical motion, embedded firmware, and networked communication into a compact autonomous system.
-
+It has been designed with the inspiration of removing multiple traditional ceiling fire detectors, replacing them with one robot to monitor an entire room.
 ---
 
 ## Overview
+<img width="2156" height="970" alt="image" src="https://github.com/user-attachments/assets/b1b177dd-06fd-498e-a911-5322ea3c7b52" />
 
 The robot continuously rotates using a stepper motor while scanning its surroundings with an infrared camera module.  
-When a fire source is detected, it:
-1. Stops rotating.
-2. Sends a wireless alert to another ESP32 device using the ESP-NOW protocol.
+When a fire source is detected, it stops rotating and sends a wireless alert to another ESP32 device using the ESP-NOW protocol.
 
 This system demonstrates a practical integration of computer vision, sensor fusion, and real-time control on embedded hardware.
 
