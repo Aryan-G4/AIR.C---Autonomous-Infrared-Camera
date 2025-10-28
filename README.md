@@ -1,5 +1,7 @@
 # AIDA: Automated Infrared Detection Aperture
 <img width="229" height="304" alt="image" src="https://github.com/user-attachments/assets/da08b78b-706a-4cf4-9826-1c3fa212ee07" />
+<img width="584" height="778" alt="image" src="https://github.com/user-attachments/assets/ffaec6b3-e46c-4cc1-a89e-84c2f520a930" />
+
 A self-controlled, fire-detecting robot that uses infrared imaging and wireless communication to identify and alert the presence of fire in real time and wirelessly report it to a host computer.  
 This project combines mechanical motion, embedded firmware, and networked communication into a compact autonomous system.
 It has been designed with the inspiration of removing multiple traditional ceiling fire detectors, replacing them with one robot to monitor an entire room.
