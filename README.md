@@ -27,7 +27,7 @@ Multiple Fire Monitors can transmit to the reciever
 
 ---
 ## Solidworks model (3D printed)
-<img width="400" " alt="image" src="https://github.com/user-attachments/assets/1a46ad9c-f759-4687-a3e5-eea4655ce61a" />
+<img width="400"  alt="image" src="https://github.com/user-attachments/assets/1a46ad9c-f759-4687-a3e5-eea4655ce61a" />
 <img width="400"  alt="image" src="https://github.com/user-attachments/assets/bb2ac3ba-a122-4a52-987d-482a2ab05275" />
 
 ## Physical Model
